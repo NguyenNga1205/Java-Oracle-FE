@@ -1,31 +1,30 @@
-# UniVerse – QLSV Oracle (Tailwind CSS UI v2)
+# UniVerse – QLSV Oracle (UI v3)
 
-## Thiết lập
+Giao diện tối, thân thiện, xây trên Next.js 16 + Tailwind v4 + shadcn/ui.
 
-Yêu cầu Node.js 20.9+ (khuyến nghị Node 22), npm, backend Spring Boot chạy tại `http://localhost:8080`.
+## Chạy
+
+Yêu cầu Node.js 20.9+, backend Spring Boot tại `http://localhost:8080`.
 
 ```powershell
-cd E:\QLSV_Oracle_Fullstack\frontend
 npm install
 npm run dev
 ```
 
-Mở http://localhost:3000. Để trỏ tới API khác, tạo `.env.local`:
+Mở http://localhost:3000. Đổi API bằng `.env.local`: `NEXT_PUBLIC_API_URL=http://localhost:8080`.
 
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8080
-```
+## Cấu trúc
 
-Nếu sửa `.env.local`, khởi động lại `npm run dev`.
+- `app/login` – đăng nhập; `app/(app)/*` – các trang sau đăng nhập (dashboard, `[entity]` CRUD, accounts, import, schedules, teaching-classes, profile).
+- `components/ui` – shadcn + component tuỳ biến thay thế control mặc định của trình duyệt:
+  `select.tsx` (Select/Combobox), `date-picker.tsx`, `time-picker.tsx`, `dropzone.tsx`.
+- `components/app` – shell, DataTable, form, các khối dùng chung.
+- `lib/entities.ts` – cấu hình các danh mục CRUD; `lib/api.ts` – gọi API (Basic Auth lưu sessionStorage).
 
-## Điểm mới
-- Tailwind CSS v4 + PostCSS, không cần `tailwind.config.js`.
-- Login gradient, sidebar responsive, dashboard thống kê, bảng dữ liệu có tìm kiếm phía client, modal CRUD.
-- Role ADMIN: quản lý các danh mục và tài khoản. Role TEACHER: xem dashboard, sinh viên, giảng viên và hồ sơ. Role STUDENT: hồ sơ cá nhân.
-- Giữ nguyên các endpoint Spring Boot hiện có, không đổi schema Oracle.
+## Theme
 
-## Ghi chú
-- Dashboard ADMIN dùng `/api/admin/stats`; dashboard TEACHER tính thống kê từ dữ liệu catalog được phép đọc.
-- Basic Auth đang lưu ở sessionStorage theo kiến trúc backend hiện tại. Chỉ phù hợp chạy local/demo; triển khai thực tế nên chuyển sang đăng nhập dựa trên session HttpOnly cookie và HTTPS.
-- Không có dữ liệu demo giả trên dashboard; cần chạy backend và seed database để có số liệu.
-- Nếu frontend báo lỗi kết nối, kiểm tra Spring Boot, Oracle, CORS localhost:3000 và thông tin đăng nhập.
+Token màu/font nằm trong `app/globals.css` (nền `#0e1116`, accent periwinkle `#93a5ff`), font Be Vietnam Pro + JetBrains Mono.
+
+## Lưu ý
+
+Basic Auth trong sessionStorage chỉ phù hợp demo/local; triển khai thật nên dùng cookie HttpOnly + HTTPS.
