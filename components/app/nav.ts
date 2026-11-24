@@ -3,7 +3,6 @@ import {
   Building2,
   CalendarClock,
   CalendarDays,
-  FileSpreadsheet,
   GraduationCap,
   Layers,
   LayoutDashboard,
@@ -29,7 +28,6 @@ const all: Record<string, NavItem> = {
   "class-subjects": { href: "/class-subjects", label: "Phân công môn theo lớp", icon: Layers },
   "teaching-classes": { href: "/teaching-classes", label: "Lớp giảng dạy", icon: BookOpen },
   schedules: { href: "/schedules", label: "Lịch học & điểm danh", icon: CalendarClock },
-  import: { href: "/import", label: "Nhập từ Excel", icon: FileSpreadsheet },
   accounts: { href: "/accounts", label: "Tài khoản", icon: ShieldCheck },
   profile: { href: "/profile", label: "Hồ sơ của tôi", icon: UserRound },
 };
@@ -41,7 +39,7 @@ export function navFor(role: AuthUser["role"]): NavGroup[] {
       { label: "Chung", items: pick("dashboard") },
       { label: "Con người", items: pick("students", "teachers", "accounts") },
       { label: "Tổ chức đào tạo", items: pick("faculties", "years", "classes", "subjects", "class-subjects") },
-      { label: "Vận hành", items: pick("schedules", "import") },
+      { label: "Vận hành", items: pick("schedules") },
       { label: "Cá nhân", items: pick("profile") },
     ];
   if (role === "TEACHER")

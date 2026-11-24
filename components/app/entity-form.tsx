@@ -8,7 +8,10 @@ import type { EntityDef, FieldDef } from "@/lib/entities";
 import { genderCode, statusLabels } from "@/lib/labels";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FileSpreadsheet, PencilLine } from "lucide-react";
+import { StudentImport } from "./student-import";
 import { Input } from "@/components/ui/input";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { Field } from "./shared";
@@ -155,31 +158,55 @@ export function EntityFormDialog({ def, open, onOpenChange, editing, lookup, onS
     }
   }
 
+  const [mode, setMode] = React.useState<"manual" | "excel">("manual");
+  React.useEffect(() => { if (open) setMode("manual"); }, [open]);
+  const canImport = def.slug === "students" && !editing;
   const wide = def.fields.length <= 3;
+
+  const manualForm = (
+    <form id="entity-form" onSubmit={submit} noValidate className="space-y-4">
+      <div className={wide ? "grid gap-4" : "grid gap-4 sm:grid-cols-2"}>
+        {def.fields.map((f) => (
+          <Field key={f.key} label={f.label} htmlFor={"f-" + f.key} required={f.required} error={errors[f.key]}>
+            {renderControl(f)}
+          </Field>
+        ))}
+      </div>
+      {serverError && <p role="alert" className="border-destructive/30 bg-destructive/10 text-destructive rounded-lg border px-3 py-2.5 text-sm">{serverError}</p>}
+    </form>
+  );
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl" onOpenAutoFocus={(e) => e.preventDefault()}>
-        <DialogHeader>
-          <DialogTitle>{def.slug === "classes" && editing ? "Phân công giảng viên" : `${editing ? "Cập nhật" : "Thêm"} ${def.singular}`}</DialogTitle>
-          <DialogDescription>
-            {def.slug === "classes" ? "Giảng viên phụ trách phải thuộc cùng khoa với lớp." : "Điền thông tin bên dưới rồi bấm Lưu."}
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={submit} noValidate className="space-y-5">
-          <div className={wide ? "grid gap-4" : "grid gap-4 sm:grid-cols-2"}>
-            {def.fields.map((f) => (
-              <Field key={f.key} label={f.label} htmlFor={"f-" + f.key} required={f.required} error={errors[f.key]}>
-                {renderControl(f)}
-              </Field>
-            ))}
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="flex w-full flex-col gap-0 sm:max-w-xl" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <SheetHeader className="border-b">
+          <SheetTitle>{def.slug === "classes" && editing ? "Phân công giảng viên" : `${editing ? "Cập nhật" : "Thêm"} ${def.singular}`}</SheetTitle>
+          <SheetDescription>
+            {def.slug === "classes" ? "Giảng viên phụ trách phải thuộc cùng khoa với lớp." : canImport ? "Thêm từng sinh viên hoặc nhập hàng loạt từ file Excel." : "Điền thông tin bên dưới rồi bấm Lưu."}
+          </SheetDescription>
+        </SheetHeader>
+        {canImport && (
+          <div className="border-b px-4 pt-3 pb-3">
+            <Tabs value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
+              <TabsList className="w-full">
+                <TabsTrigger value="manual" className="flex-1 gap-2"><PencilLine className="size-4" /> Thêm thủ công</TabsTrigger>
+                <TabsTrigger value="excel" className="flex-1 gap-2"><FileSpreadsheet className="size-4" /> Tải lên Excel</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
-          {serverError && <p role="alert" className="border-destructive/30 bg-destructive/10 text-destructive rounded-lg border px-3 py-2.5 text-sm">{serverError}</p>}
-          <DialogFooter>
+        )}
+        <div className="flex-1 overflow-y-auto p-4">
+          {mode === "excel" && canImport ? (
+            <StudentImport onImported={() => { onOpenChange(false); onSaved(); }} />
+          ) : manualForm}
+        </div>
+        {!(mode === "excel" && canImport) && (
+          <SheetFooter className="border-t sm:flex-row sm:justify-end">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Hủy</Button>
-            <Button type="submit" disabled={busy}>{busy && <Loader2 className="animate-spin" />} {busy ? "Đang lưu…" : "Lưu"}</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <Button type="submit" form="entity-form" disabled={busy}>{busy && <Loader2 className="animate-spin" />} {busy ? "Đang lưu…" : "Lưu"}</Button>
+          </SheetFooter>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }

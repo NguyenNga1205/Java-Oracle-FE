@@ -40,9 +40,9 @@ export default function ProfilePage() {
       <section className="bg-card max-w-4xl overflow-hidden rounded-2xl border">
         <div className="from-primary/25 via-primary/10 h-24 bg-gradient-to-r to-transparent" />
         <div className="px-6 pb-6 sm:px-8">
-          <div className="-mt-10 flex flex-wrap items-end gap-4">
+          <div className="-mt-10 flex flex-col gap-3">
             <UserAvatar name={name} className="border-card size-20 rounded-2xl border-4 text-2xl [&_span]:text-2xl" />
-            <div className="pb-1">
+            <div>
               <h2 className="text-xl font-bold">{name}</h2>
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <Badge>{roleLabels[user.role]}</Badge>

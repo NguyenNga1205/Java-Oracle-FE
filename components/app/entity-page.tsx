@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Eye, Pencil, Plus, Trash2, UserRoundCog } from "lucide-react";
+import { Building2, CalendarDays, Eye, Pencil, Plus, School, Trash2, UserRoundCog } from "lucide-react";
 import { toast } from "sonner";
 import { api, type Item } from "@/lib/api";
 import { entityAccess, lookupKeys, type EntityDef } from "@/lib/entities";
@@ -16,6 +16,8 @@ import { EntityFormDialog } from "./entity-form";
 import { Code, ConfirmDialog, EmptyState, PageHeader, StatusBadge, UserAvatar } from "./shared";
 
 const label = (x?: Item | null) => x?.name || x?.fullName || "—";
+const sortRows = (list: Item[]) =>
+  [...list].sort((a, b) => String(a.code ?? a.name ?? a.fullName ?? "").localeCompare(String(b.code ?? b.name ?? b.fullName ?? ""), "vi", { numeric: true }));
 
 function IconAction({ tip, onClick, children, danger }: { tip: string; onClick: () => void; children: React.ReactNode; danger?: boolean }) {
   return (
@@ -55,14 +57,14 @@ export function EntityPage({ def }: { def: EntityDef }) {
         const results = await Promise.all(lookupKeys.map((k) => api("/api/catalog/" + k)));
         const map = Object.fromEntries(lookupKeys.map((k, i) => [k, results[i]]));
         setLookup(map);
-        setRows(map[def.slug] ?? (await api("/api/catalog/" + def.slug)));
+        setRows(sortRows(map[def.slug] ?? (await api("/api/catalog/" + def.slug))));
       } else {
         let list: Item[] = await api("/api/catalog/" + def.slug);
         if (def.slug === "teachers") {
           const me = await api("/api/teacher/profile");
           list = list.filter((t) => t.faculty?.id === me.faculty?.id);
         }
-        setRows(list);
+        setRows(sortRows(list));
       }
     } catch (e: any) {
       setError(e.message);
@@ -92,12 +94,22 @@ export function EntityPage({ def }: { def: EntityDef }) {
   }
 
   const columns = React.useMemo<Column<Item>[]>(() => {
+    const isPerson = def.slug === "students" || def.slug === "teachers";
+    const TileIcon = def.slug === "classes" ? School : def.slug === "faculties" ? Building2 : CalendarDays;
     const person = (x: Item) => (
       <div className="flex items-center gap-3">
-        <UserAvatar name={label(x)} />
+        {isPerson ? (
+          <UserAvatar name={label(x)} />
+        ) : (
+          <span className="bg-primary/15 text-primary grid size-9 shrink-0 place-items-center rounded-xl"><TileIcon className="size-[18px]" /></span>
+        )}
         <div className="min-w-0">
           <p className="truncate font-semibold">{label(x)}</p>
-          <p className="text-muted-foreground truncate text-xs">{x.email || x.phone || `ID #${x.id}`}</p>
+          {isPerson ? (
+            <p className="text-muted-foreground truncate text-xs">{x.email || x.phone || "—"}</p>
+          ) : def.slug === "classes" ? (
+            <p className="text-muted-foreground text-xs">Tối đa {x.maxStudents ?? 50} sinh viên</p>
+          ) : null}
         </div>
       </div>
     );
@@ -120,7 +132,7 @@ export function EntityPage({ def }: { def: EntityDef }) {
           { key: "name", header: "Lớp", cell: person, sortValue: (x) => x.name },
           { key: "code", header: "Mã lớp", cell: (x) => <Code>{x.code}</Code> },
           { key: "faculty", header: "Khoa", cell: (x) => x.faculty?.name ?? "—" },
-          { key: "teacher", header: "Giảng viên phụ trách", cell: (x) => x.teacher?.fullName ?? <span className="text-warning">Chưa phân công</span> },
+          { key: "teacher", header: "Giảng viên phụ trách", cell: (x) => x.teacher?.fullName ?? <span className="text-muted-foreground italic">Chưa phân công</span> },
         );
         break;
       case "subjects":

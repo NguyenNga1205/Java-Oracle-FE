@@ -8,21 +8,23 @@
   --radius: 0.875rem;
 
   /* Surfaces: background < card < popover */
-  --background: #0e1116;
+  --background: #0a0c10;
   --foreground: #e9ebf2;
-  --card: #151a23;
+  --card: #11141a;
   --card-foreground: #e9ebf2;
-  --popover: #1b212d;
+  --popover: #161a22;
   --popover-foreground: #e9ebf2;
 
-  /* Brand: friendly periwinkle */
-  --primary: #93a5ff;
-  --primary-foreground: #0d1020;
-  --secondary: #1e2431;
+  /* Brand: vivid blue with gradient fill */
+  --primary: #4a82ff;
+  --primary-top: #6b9bff;
+  --primary-bottom: #3466e8;
+  --primary-foreground: #ffffff;
+  --secondary: #1a1e27;
   --secondary-foreground: #dde1ee;
-  --muted: #1a202b;
+  --muted: #161a22;
   --muted-foreground: #98a2b8;
-  --accent: #252d3f;
+  --accent: #1c2230;
   --accent-foreground: #f1f3fa;
 
   /* Semantic */
@@ -31,24 +33,24 @@
   --warning: #fbbf5c;
   --info: #62c9ff;
 
-  --border: #262d3b;
-  --input: #2b3344;
-  --ring: #93a5ff;
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #4a82ff;
 
-  --chart-1: #93a5ff;
+  --chart-1: #4a82ff;
   --chart-2: #4fdca0;
   --chart-3: #fbbf5c;
   --chart-4: #62c9ff;
   --chart-5: #ff9ec4;
 
-  --sidebar: #0b0e13;
+  --sidebar: #0d1117;
   --sidebar-foreground: #c5cbdb;
-  --sidebar-primary: #93a5ff;
-  --sidebar-primary-foreground: #0d1020;
-  --sidebar-accent: #1a2030;
+  --sidebar-primary: #4a82ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(74, 130, 255, 0.14);
   --sidebar-accent-foreground: #f1f3fa;
-  --sidebar-border: #1d2330;
-  --sidebar-ring: #93a5ff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #4a82ff;
 }
 
 @theme inline {
@@ -61,6 +63,11 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-top: var(--primary-top);
+  --color-primary-bottom: var(--primary-bottom);
+  --color-link: #86adff;
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-button-hover: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 6px 14px -4px rgb(74 130 255 / 0.55);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);

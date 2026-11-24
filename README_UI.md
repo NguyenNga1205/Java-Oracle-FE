@@ -15,7 +15,7 @@ Mở http://localhost:3000. Đổi API bằng `.env.local`: `NEXT_PUBLIC_API_URL
 
 ## Cấu trúc
 
-- `app/login` – đăng nhập; `app/(app)/*` – các trang sau đăng nhập (dashboard, `[entity]` CRUD, accounts, import, schedules, teaching-classes, profile).
+- `app/login` – đăng nhập; `app/(app)/*` – các trang sau đăng nhập (dashboard, `[entity]` CRUD (thêm sinh viên có tab Excel), accounts, schedules, teaching-classes, profile).
 - `components/ui` – shadcn + component tuỳ biến thay thế control mặc định của trình duyệt:
   `select.tsx` (Select/Combobox), `date-picker.tsx`, `time-picker.tsx`, `dropzone.tsx`.
 - `components/app` – shell, DataTable, form, các khối dùng chung.

@@ -37,5 +37,10 @@ export const viDate = (s?: string | null) => {
   const d = parseIso(s);
   return d ? d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "—";
 };
-export const initials = (name: string) =>
-  name.trim().split(/\s+/).slice(-2).map((s) => s[0]?.toUpperCase()).join("") || "U";
+export const initials = (name: string) => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "U";
+  const first = parts[0][0];
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return (first + last).toUpperCase();
+};
