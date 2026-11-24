@@ -90,6 +90,7 @@ export function EntityPage({ def }: { def: EntityDef }) {
       toast.error(e.message);
     } finally {
       setDeleteBusy(false);
+      setDeleting(null);
     }
   }
 

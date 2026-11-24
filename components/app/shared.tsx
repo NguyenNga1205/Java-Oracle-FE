@@ -131,13 +131,19 @@ export function Field({
   className?: string;
   children: React.ReactNode;
 }) {
+  const autoId = React.useId();
+  const id = htmlFor ?? autoId;
+  const control =
+    React.isValidElement<{ id?: string }>(children) && !children.props.id && typeof children.type !== "string"
+      ? React.cloneElement(children, { id })
+      : children;
   return (
     <div className={cn("space-y-1.5", className)}>
-      <Label htmlFor={htmlFor} className="text-[13px]">
+      <Label htmlFor={id} className="text-[13px]">
         {label}
         {required && <span className="text-destructive">*</span>}
       </Label>
-      {children}
+      {control}
       {error ? (
         <p role="alert" className="text-destructive text-xs">{error}</p>
       ) : hint ? (
