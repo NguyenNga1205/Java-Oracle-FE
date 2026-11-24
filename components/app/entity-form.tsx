@@ -46,13 +46,20 @@ export function EntityFormDialog({ def, open, onOpenChange, editing, lookup, onS
   const [busy, setBusy] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
 
+  const hasCode = def.slug === "students" || def.slug === "teachers";
   React.useEffect(() => {
-    if (open) {
-      setForm(toForm(def, editing));
-      setErrors({});
-      setServerError("");
+    if (!open) return;
+    setForm(toForm(def, editing));
+    setErrors({});
+    setServerError("");
+    if (hasCode && !editing) {
+      let alive = true;
+      api<{ code: string }>("/api/catalog/next-code/" + def.slug)
+        .then((r) => alive && setForm((f) => (f.code ? f : { ...f, code: r.code })))
+        .catch(() => {});
+      return () => { alive = false; };
     }
-  }, [open, editing, def]);
+  }, [open, editing, def, hasCode]);
 
   const set = (patch: Item) => setForm((f) => ({ ...f, ...patch }));
 
@@ -75,6 +82,10 @@ export function EntityFormDialog({ def, open, onOpenChange, editing, lookup, onS
     const next: Record<string, string> = {};
     for (const f of def.fields) {
       const v = form[f.key];
+      if (f.key === "code" && hasCode && v) {
+        const taken = (lookup[def.slug] ?? []).some((x) => x.id !== editing?.id && String(x.code).toLowerCase() === String(v).trim().toLowerCase());
+        if (taken) { next[f.key] = "Mã này đã tồn tại, hãy chọn mã khác"; continue; }
+      }
       if (f.required && (v === undefined || v === null || String(v).trim() === "")) next[f.key] = "Vui lòng nhập thông tin này";
       else if (f.type === "email" && v && !/^\S+@\S+\.\S+$/.test(String(v))) next[f.key] = "Email chưa đúng định dạng";
     }
@@ -167,7 +178,7 @@ export function EntityFormDialog({ def, open, onOpenChange, editing, lookup, onS
     <form id="entity-form" onSubmit={submit} noValidate className="space-y-4">
       <div className={wide ? "grid gap-4" : "grid gap-4 sm:grid-cols-2"}>
         {def.fields.map((f) => (
-          <Field key={f.key} label={f.label} htmlFor={"f-" + f.key} required={f.required} error={errors[f.key]}>
+          <Field key={f.key} label={f.label} htmlFor={"f-" + f.key} required={f.required} error={errors[f.key]} hint={f.key === "code" && hasCode && !editing ? "Tự động tạo, bạn có thể sửa" : undefined}>
             {renderControl(f)}
           </Field>
         ))}

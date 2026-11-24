@@ -23,7 +23,7 @@ Mở http://localhost:3000. Đổi API bằng `.env.local`: `NEXT_PUBLIC_API_URL
 
 ## Theme
 
-Token màu/font nằm trong `app/globals.css` (nền `#0e1116`, accent periwinkle `#93a5ff`), font Be Vietnam Pro + JetBrains Mono.
+Token màu/font nằm trong `app/globals.css` (sáng/tối qua nút ở header, accent xanh `#3b74f0` gradient), font Be Vietnam Pro + JetBrains Mono.
 
 ## Lưu ý
 

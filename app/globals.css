@@ -4,9 +4,56 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --radius: 0.875rem;
 
+  --background: #f4f6fa;
+  --foreground: #101828;
+  --card: #ffffff;
+  --card-foreground: #101828;
+  --popover: #ffffff;
+  --popover-foreground: #101828;
+
+  --primary: #3b74f0;
+  --primary-top: #5b8dff;
+  --primary-bottom: #2f63e0;
+  --primary-foreground: #ffffff;
+  --secondary: #eceff5;
+  --secondary-foreground: #1d2939;
+  --muted: #eef1f6;
+  --muted-foreground: #556070;
+  --accent: #e6edfd;
+  --accent-foreground: #101828;
+
+  --destructive: #d92d3d;
+  --destructive-solid: #d92d3d;
+  --success: #0b8a5a;
+  --warning: #a65f00;
+  --info: #0a73ad;
+  --link: #2552c9;
+
+  --border: rgba(16, 24, 40, 0.1);
+  --input: rgba(16, 24, 40, 0.16);
+  --ring: #3b74f0;
+
+  --chart-1: #3b74f0;
+  --chart-2: #0b8a5a;
+  --chart-3: #a65f00;
+  --chart-4: #0a73ad;
+  --chart-5: #c2417a;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #344054;
+  --sidebar-primary: #3b74f0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(59, 116, 240, 0.1);
+  --sidebar-accent-foreground: #101828;
+  --sidebar-border: rgba(16, 24, 40, 0.08);
+  --sidebar-ring: #3b74f0;
+}
+
+.dark {
+  color-scheme: dark;
   /* Surfaces: background < card < popover */
   --background: #0a0c10;
   --foreground: #e9ebf2;
@@ -29,6 +76,8 @@
 
   /* Semantic */
   --destructive: #ff7088;
+  --destructive-solid: #d92d3d;
+  --link: #86adff;
   --success: #4fdca0;
   --warning: #fbbf5c;
   --info: #62c9ff;
@@ -65,8 +114,9 @@
   --color-primary: var(--primary);
   --color-primary-top: var(--primary-top);
   --color-primary-bottom: var(--primary-bottom);
-  --color-link: #86adff;
-  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 1px 2px rgb(0 0 0 / 0.35);
+  --color-link: var(--link);
+  --color-destructive-solid: var(--destructive-solid);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 1px 2px rgb(16 24 40 / 0.25);
   --shadow-button-hover: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 6px 14px -4px rgb(74 130 255 / 0.55);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);

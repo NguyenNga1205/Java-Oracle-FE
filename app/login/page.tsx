@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { BookOpenCheck, CalendarCheck, Eye, EyeOff, GraduationCap, Loader2, ShieldCheck } from "lucide-react";
+import { BookOpenCheck, CalendarCheck, Eye, EyeOff, Loader2, ShieldCheck } from "lucide-react";
 import { homeFor, useAuth } from "@/components/app/auth";
 import { Field } from "@/components/app/shared";
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,8 @@ export default function LoginPage() {
     <div className="bg-glow grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
       <section className="hidden flex-col justify-between p-12 lg:flex">
         <div className="flex items-center gap-3">
-          <span className="bg-primary text-primary-foreground grid size-11 place-items-center rounded-2xl">
-            <GraduationCap className="size-6" />
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.svg" alt="" className="size-11 rounded-2xl" />
           <span className="text-xl font-bold tracking-tight">UniVerse</span>
         </div>
         <div className="max-w-lg">

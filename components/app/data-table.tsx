@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, RefreshCw, Search, Searc
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "./shared";
@@ -81,42 +82,66 @@ export function DataTable<T>({
 
   React.useEffect(() => setPage(0), [rows, query]);
 
+  const sortOptions = React.useMemo(
+    () => [
+      { value: "", label: "Mặc định" },
+      ...columns.filter((x) => x.sortValue).flatMap((x) => [
+        { value: `${x.key}:1`, label: `${x.header} (A → Z)` },
+        { value: `${x.key}:-1`, label: `${x.header} (Z → A)` },
+      ]),
+    ],
+    [columns],
+  );
+
   const toggleSort = (key: string) =>
     setSort((s) => (s?.key !== key ? { key, dir: 1 } : s.dir === 1 ? { key, dir: -1 } : null));
 
   return (
-    <div className="bg-card overflow-hidden rounded-2xl border">
-      <div className="flex flex-wrap items-center gap-3 border-b p-4">
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-3">
         {searchText && (
-          <div className="relative min-w-52 flex-1 sm:max-w-sm">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+          <div className="relative w-full sm:w-80">
+            <Search className="text-muted-foreground absolute top-1/2 left-4 size-4 -translate-y-1/2" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="h-10 rounded-lg pl-9"
+              className="bg-card h-10 rounded-full pl-10 shadow-xs"
             />
           </div>
         )}
         {filters}
+        {sortOptions.length > 1 && (
+          <div className="w-44">
+            <Select
+              aria-label="Sắp xếp"
+              value={sort ? `${sort.key}:${sort.dir}` : ""}
+              onChange={(v) => { if (!v) setSort(null); else { const [k, d] = v.split(":"); setSort({ key: k, dir: d === "-1" ? -1 : 1 }); } }}
+              options={sortOptions}
+              placeholder="Sắp xếp"
+              className="bg-card h-10 rounded-full"
+            />
+          </div>
+        )}
         <div className="ml-auto flex items-center gap-2">
           {toolbarRight}
           {onRetry && (
-            <Button variant="outline" size="icon" aria-label="Làm mới" onClick={onRetry} disabled={loading} className="size-10 rounded-lg">
+            <Button variant="outline" size="icon" aria-label="Làm mới" onClick={onRetry} disabled={loading} className="bg-card size-10 rounded-full">
               <RefreshCw className={cn("size-4", loading && "animate-spin")} />
             </Button>
           )}
         </div>
       </div>
 
+    <div className="bg-card overflow-hidden rounded-2xl border">
       {error ? (
         <EmptyState tone="error" title="Không tải được dữ liệu" description={error} action={onRetry && <Button variant="outline" onClick={onRetry}>Thử lại</Button>} />
       ) : (
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
+              <TableRow className="bg-muted/60 hover:bg-muted/60">
                 {columns.map((c) => (
                   <TableHead key={c.key} className={cn("text-muted-foreground h-11 text-xs font-semibold tracking-wide uppercase", c.align === "right" && "text-right", c.className)}>
                     {c.sortValue ? (
@@ -178,6 +203,7 @@ export function DataTable<T>({
           )}
         </div>
       )}
+    </div>
     </div>
   );
 }

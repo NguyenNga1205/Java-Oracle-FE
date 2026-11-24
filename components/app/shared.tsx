@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -176,16 +175,13 @@ export function ConfirmDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={busy}>Hủy</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            variant={destructive ? "destructive" : "default"}
             disabled={busy}
-            onClick={(e) => {
-              e.preventDefault();
-              void onConfirm();
-            }}
-            className={destructive ? "bg-destructive text-background hover:bg-destructive/90" : undefined}
+            onClick={() => void onConfirm()}
           >
             {busy ? "Đang xử lý…" : confirmLabel}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/components/app/auth";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -22,12 +23,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`dark ${sans.variable} ${mono.variable}`}>
+    <html lang="vi" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
-        <AuthProvider>
-          <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
-        </AuthProvider>
-        <Toaster position="top-right" richColors closeButton />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+          <AuthProvider>
+            <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
+          </AuthProvider>
+          <Toaster position="top-right" richColors closeButton />
+        </ThemeProvider>
       </body>
     </html>
   );

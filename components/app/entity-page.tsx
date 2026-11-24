@@ -235,7 +235,7 @@ export function EntityPage({ def }: { def: EntityDef }) {
         emptyAction={isAdmin && <Button onClick={() => { setEditing(null); setFormOpen(true); }}><Plus /> Thêm {def.singular}</Button>}
         filters={def.slug === "students" && isAdmin ? (
           <div className="w-48">
-            <Select aria-label="Lọc theo lớp" value={classFilter} onChange={setClassFilter} options={classOptions} placeholder="Tất cả lớp" searchable />
+            <Select aria-label="Lọc theo lớp" value={classFilter} onChange={setClassFilter} options={classOptions} placeholder="Tất cả lớp" searchable className="bg-card h-10 rounded-full" />
           </div>
         ) : undefined}
       />
@@ -254,7 +254,7 @@ export function EntityPage({ def }: { def: EntityDef }) {
         open={!!deleting}
         onOpenChange={(o) => !o && setDeleting(null)}
         title={`Xóa ${def.singular}?`}
-        description={`“${label(deleting)}” sẽ bị xóa khỏi hệ thống. Thao tác này không thể hoàn tác.`}
+        description={`“${label(deleting)}” sẽ bị xóa khỏi hệ thống${def.slug === "students" || def.slug === "teachers" ? ", cùng với tài khoản đăng nhập liên kết (nếu có)" : ""}. Thao tác này không thể hoàn tác.`}
         confirmLabel="Xóa"
         destructive
         busy={deleteBusy}

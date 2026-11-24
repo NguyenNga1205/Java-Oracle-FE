@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, Copy, KeyRound, Loader2, Lock, LockOpen, MoreHorizontal, RefreshCw, UserRoundPlus } from "lucide-react";
+import { Check, Copy, KeyRound, Loader2, Lock, LockOpen, MoreHorizontal, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
 import { toast } from "sonner";
 import { api, type Item } from "@/lib/api";
 import { roleLabels } from "@/lib/labels";
@@ -48,6 +48,20 @@ export default function AccountsPage() {
   const [resetFor, setResetFor] = React.useState<Item | null>(null);
   const [toggle, setToggle] = React.useState<Item | null>(null);
   const [toggleBusy, setToggleBusy] = React.useState(false);
+  const [removing, setRemoving] = React.useState<Item | null>(null);
+  const [removeBusy, setRemoveBusy] = React.useState(false);
+
+  async function confirmRemove() {
+    if (!removing) return;
+    setRemoveBusy(true);
+    try {
+      await api(`/api/admin/users/${removing.id}`, { method: "DELETE" });
+      toast.success("Đã xóa tài khoản. Hồ sơ vẫn được giữ lại.");
+      setRemoving(null);
+      await load();
+    } catch (e: any) { toast.error(e.message); }
+    finally { setRemoveBusy(false); }
+  }
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -115,6 +129,7 @@ export default function AccountsPage() {
           <DropdownMenuItem variant={a.enabled ? "destructive" : "default"} onSelect={() => setToggle(a)}>
             {a.enabled ? <><Lock /> Khóa tài khoản</> : <><LockOpen /> Mở khóa</>}
           </DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onSelect={() => setRemoving(a)}><Trash2 /> Xóa tài khoản</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ) },
@@ -155,7 +170,7 @@ export default function AccountsPage() {
         emptyTitle="Chưa có tài khoản nào" emptyDescription="Cấp tài khoản cho giảng viên hoặc sinh viên để họ đăng nhập được."
         filters={
           <Tabs value={role} onValueChange={(v) => setRole(v as typeof role)}>
-            <TabsList>
+            <TabsList variant="line">
               <TabsTrigger value="ALL">Tất cả ({counts.ALL})</TabsTrigger>
               <TabsTrigger value="TEACHER">Giảng viên ({counts.TEACHER})</TabsTrigger>
               <TabsTrigger value="STUDENT">Sinh viên ({counts.STUDENT})</TabsTrigger>
@@ -166,6 +181,11 @@ export default function AccountsPage() {
 
       <CreateAccountSheet role={createRole} onClose={() => setCreateRole(null)} profiles={createRole === "STUDENT" ? unlinkedStudents : unlinkedTeachers} onCreated={() => void load()} />
       <ResetPasswordSheet account={resetFor} onClose={() => setResetFor(null)} />
+      <ConfirmDialog
+        open={!!removing} onOpenChange={(o) => !o && setRemoving(null)} busy={removeBusy} onConfirm={confirmRemove}
+        title="Xóa tài khoản?" destructive confirmLabel="Xóa tài khoản"
+        description={`Tài khoản “${removing?.username}” sẽ bị xóa và không đăng nhập được nữa. Hồ sơ ${removing?.fullName ?? ""} vẫn được giữ lại, bạn có thể cấp tài khoản mới sau.`}
+      />
       <ConfirmDialog
         open={!!toggle} onOpenChange={(o) => !o && setToggle(null)} busy={toggleBusy} onConfirm={confirmToggle}
         title={toggle?.enabled ? "Khóa tài khoản?" : "Mở khóa tài khoản?"} destructive={!!toggle?.enabled}

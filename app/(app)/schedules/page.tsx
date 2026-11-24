@@ -160,7 +160,7 @@ export default function SchedulesPage() {
       {error && <div className="mb-5"><InlineError message={error} onRetry={() => void load()} /></div>}
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="mb-4">
-        <TabsList>
+        <TabsList variant="line">
           <TabsTrigger value="sessions">Buổi học ({sessions.length})</TabsTrigger>
           <TabsTrigger value="weekly">Thời khóa biểu tuần ({weekly.length})</TabsTrigger>
         </TabsList>

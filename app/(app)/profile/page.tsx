@@ -17,6 +17,11 @@ export default function ProfilePage() {
 
   React.useEffect(() => {
     if (!user) return;
+    if (user.role === "ADMIN") {
+      setProfile({ fullName: "Quản trị viên hệ thống", code: user.username });
+      setLoading(false);
+      return;
+    }
     api(`/api/${user.role.toLowerCase()}/profile`)
       .then(setProfile)
       .catch((e) => setError(e.message))
@@ -37,7 +42,7 @@ export default function ProfilePage() {
   return (
     <>
       <PageHeader title="Hồ sơ của tôi" description="Thông tin cá nhân và học vụ được đồng bộ từ hệ thống." />
-      <section className="bg-card max-w-4xl overflow-hidden rounded-2xl border">
+      <section className="bg-card overflow-hidden rounded-2xl border">
         <div className="from-primary/25 via-primary/10 h-24 bg-gradient-to-r to-transparent" />
         <div className="px-6 pb-6 sm:px-8">
           <div className="-mt-10 flex flex-col gap-3">

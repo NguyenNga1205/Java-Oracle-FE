@@ -60,3 +60,11 @@ export function titleFor(pathname: string) {
   const match = Object.values(all).find((i) => (i.href === "/" ? pathname === "/" : pathname.startsWith(i.href)));
   return match?.label ?? "UniVerse";
 }
+
+export function breadcrumbFor(pathname: string, role: AuthUser["role"]) {
+  for (const group of navFor(role)) {
+    const item = group.items.find((i) => (i.href === "/" ? pathname === "/" : pathname.startsWith(i.href)));
+    if (item) return { group: group.label, item: item.label };
+  }
+  return { group: "", item: titleFor(pathname) };
+}
