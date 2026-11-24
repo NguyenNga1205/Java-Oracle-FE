@@ -28,6 +28,8 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
     } catch {
       detail = body.slice(0, 180);
     }
+    if (!detail && res.status === 403)
+      throw new Error("Máy chủ từ chối thao tác này (HTTP 403). Bạn có thể không đủ quyền, hoặc backend chưa được cập nhật bản mới nhất.");
     throw new Error(detail || `Yêu cầu thất bại (HTTP ${res.status}).`);
   }
   return (res.status === 204 ? null : await res.json()) as T;
